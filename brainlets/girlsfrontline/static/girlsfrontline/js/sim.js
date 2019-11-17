@@ -3272,18 +3272,20 @@ function simulateBattle() {
 
         if (action.type == 'normalAttack') {
           let attackBuff = doll.battle.buffs.find(buff => buff.name == 'normalAttackBuff');
+          // Handle Stella
+          let shotmultiplier = doll.id == 294 ? 2 : 1;
+
           if (attackBuff !== undefined) {
             let canCrit = 'canCrit' in attackBuff ? attackBuff.canCrit : true;
             let sureCrit = 'sureCrit' in attackBuff ? attackBuff.sureCrit : false;
             let sureHit = 'sureHit' in attackBuff ? attackBuff.sureHit : false;
             let piercing = 'piercing' in attackBuff ? attackBuff.piercing : false;
 
+            let multiplier = 1;
             if ('multiplier' in attackBuff) {
-              let multiplier = $.isArray(attackBuff.multiplier) ? attackBuff.multiplier[attackBuff.level - 1] : attackBuff.multiplier;
-              dmg = Math.max(1, doll.battle.fp * multiplier + Math.min(2, doll.battle.ap - enemy.battle.armor));
-            } else {
-              dmg = Math.max(1, doll.battle.fp + Math.min(2, doll.battle.ap - enemy.battle.armor));
+              multiplier = $.isArray(attackBuff.multiplier) ? attackBuff.multiplier[attackBuff.level - 1] : attackBuff.multiplier;
             }
+            dmg = Math.max(shotmultiplier, doll.battle.fp * multiplier + shotmultiplier * Math.min(2, doll.battle.ap - enemy.battle.armor));
 
             if (!sureHit) {
               dmg *= (doll.battle.acc / (doll.battle.acc + enemy.battle.eva));
@@ -3350,7 +3352,7 @@ function simulateBattle() {
             }
           } else {
 
-            dmg = Math.max(1, doll.battle.fp + Math.min(2, doll.battle.ap - enemy.battle.armor));
+            dmg = Math.max(shotmultiplier, doll.battle.fp + shotmultiplier * Math.min(2, doll.battle.ap - enemy.battle.armor));
             dmg *= (doll.battle.acc / (doll.battle.acc + enemy.battle.eva));
             dmg *= 1 + (doll.battle.critdmg * (doll.battle.crit / 100) / 100);
             dmg *= enemy.battle.vulnerability;
@@ -3359,7 +3361,7 @@ function simulateBattle() {
               dmg = dmg * Math.min(doll.battle.targets, enemy.count);
             }
           }
-          doll.shots += Math.floor ((doll.links - doll.battle.busylinks) * (doll.battle.acc / (doll.battle.acc + enemy.battle.eva)));
+          doll.shots += Math.floor ((doll.links - doll.battle.busylinks) * shotmultiplier * (doll.battle.acc / (doll.battle.acc + enemy.battle.eva)));
 
           //handle pkp
           let extradmg = 0;
