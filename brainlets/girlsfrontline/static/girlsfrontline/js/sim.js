@@ -2729,6 +2729,7 @@ function initDollsForBattle() {
     }
 
     doll.battle = {};
+    doll.shots = 0;
     doll.battle.fp = doll.pre_battle.fp;
     doll.battle.acc = doll.pre_battle.acc;
     doll.battle.eva = doll.pre_battle.eva;
@@ -2909,6 +2910,7 @@ function simulateBattle() {
   initiFairyForBattle();
   let simulationLength = 30 * battleLength;
   let totaldamage8s = 0;
+  let totaldamage12s = 0;
   let totaldamage20s = 0;
 
   //apply fairy talent effect to dolls
@@ -3357,6 +3359,7 @@ function simulateBattle() {
               dmg = dmg * Math.min(doll.battle.targets, enemy.count);
             }
           }
+          doll.shots += Math.floor ((doll.links - doll.battle.busylinks) * (doll.battle.acc / (doll.battle.acc + enemy.battle.eva)));
 
           //handle pkp
           let extradmg = 0;
@@ -3384,8 +3387,10 @@ function simulateBattle() {
               extradmg *= sureCrit ? (1 + (doll.battle.critdmg / 100)) : 1 + (doll.battle.critdmg * (doll.battle.crit / 100) / 100);
             }
 
+            doll.shots += sureHit? doll.links - doll.battle.busylinks :  Math.floor ((doll.links - doll.battle.busylinks) * (doll.battle.acc / (doll.battle.acc + enemy.battle.eva)));
             if ('hitCount' in extraAttack) {
               extradmg *= $.isArray(extraAttack.hitCount) ? extraAttack.hitCount[extraAttack.level - 1] : extraAttack.hitCount;
+              extrashots *= $.isArray(extraAttack.hitCount) ? extraAttack.hitCount[extraAttack.level - 1] : extraAttack.hitCount;
             }
 
             extradmg *= enemy.battle.vulnerability;
@@ -3501,6 +3506,9 @@ function simulateBattle() {
           if (currentFrame <= 30 * 8 + 1) {
             totaldamage8s += dmg;
           }
+          if (currentFrame <= 30 * 12 + 1) {
+            totaldamage12s += dmg;
+          }
           if (currentFrame <= 30 * 20 + 1) {
             totaldamage20s += dmg;
           }
@@ -3587,6 +3595,9 @@ function simulateBattle() {
           if (currentFrame <= 30 * 8 + 1) {
             totaldamage8s += dmg;
           }
+          if (currentFrame <= 30 * 12 + 1) {
+            totaldamage12s += dmg;
+          }
           if (currentFrame <= 30 * 20 + 1) {
             totaldamage20s += dmg;
           }
@@ -3618,6 +3629,9 @@ function simulateBattle() {
 
           if (currentFrame <= 30 * 8 + 1) {
             totaldamage8s += dmg;
+          }
+          if (currentFrame <= 30 * 12 + 1) {
+            totaldamage12s += dmg;
           }
           if (currentFrame <= 30 * 20 + 1) {
             totaldamage20s += dmg;
@@ -3679,6 +3693,7 @@ function simulateBattle() {
           }
           dmg *= enemy.battle.vulnerability;
           dmg *= doll.battle.busylinks;
+          doll.shots += sureHit? doll.battle.busylinks : Math.floor (doll.battle.busylinks * (doll.battle.acc / (doll.battle.acc + enemy.battle.eva)));
           if ('piercing' in action) {
             dmg *= enemy.count + 1;
           }
@@ -3709,6 +3724,9 @@ function simulateBattle() {
 
           if (currentFrame <= 30 * 8 + 1) {
             totaldamage8s += dmg;
+          }
+          if (currentFrame <= 30 * 12 + 1) {
+            totaldamage12s += dmg;
           }
           if (currentFrame <= 30 * 20 + 1) {
             totaldamage20s += dmg;
@@ -3743,8 +3761,11 @@ function simulateBattle() {
 
           if ('busylinks' in action) {
             dmg *= doll.battle.busylinks;
+            doll.shots += sureHit? doll.battle.busylinks : doll.battle.busylinks * (doll.battle.acc / (doll.battle.acc + enemy.battle.eva));
           } else {
             dmg *= doll.links;
+            doll.shots += doll.links;
+            doll.shots += sureHit? doll.links : doll.links * (doll.battle.acc / (doll.battle.acc + enemy.battle.eva));
           }
 
           if (!('targets' in action)) {
@@ -3759,6 +3780,9 @@ function simulateBattle() {
 
           if (currentFrame <= 30 * 8 + 1) {
             totaldamage8s += dmg;
+          }
+          if (currentFrame <= 30 * 12 + 1) {
+            totaldamage12s += dmg;
           }
           if (currentFrame <= 30 * 20 + 1) {
             totaldamage20s += dmg;
@@ -3781,6 +3805,9 @@ function simulateBattle() {
           if (currentFrame <= 30 * 8 + 1) {
             totaldamage8s += dmg;
           }
+          if (currentFrame <= 30 * 12 + 1) {
+            totaldamage12s += dmg;
+          }
           if (currentFrame <= 30 * 20 + 1) {
             totaldamage20s += dmg;
           }
@@ -3795,6 +3822,9 @@ function simulateBattle() {
 
           if (currentFrame <= 30 * 8 + 1) {
             totaldamage8s += dmg;
+          }
+          if (currentFrame <= 30 * 12 + 1) {
+            totaldamage12s += dmg;
           }
           if (currentFrame <= 30 * 20 + 1) {
             totaldamage20s += dmg;
@@ -3819,6 +3849,9 @@ function simulateBattle() {
           if (currentFrame <= 30 * 8 + 1) {
             totaldamage8s += dmg;
           }
+          if (currentFrame <= 30 * 12 + 1) {
+            totaldamage12s += dmg;
+          }
           if (currentFrame <= 30 * 20 + 1) {
             totaldamage20s += dmg;
           }
@@ -3829,14 +3862,17 @@ function simulateBattle() {
   }
 
   $('#dmg-8s').text(Math.round(totaldamage8s));
+  $('#dmg-12s').text(Math.round(totaldamage12s));
   $('#dmg-20s').text(Math.round(totaldamage20s));
 
   for (let i = 0; i < 5; i++) {
     if (echelon[i].id == -1) {
       continue;
     }
+
     echelon[i].totaldmg = graphData.y[i].data[currentFrame - 1];
     $('#doll' + (i + 1) + '-dmg').text(echelon[i].totaldmg);
+    $('#doll' + (i + 1) + '-shots').text(echelon[i].shots);
     if (echelon[i].battle.skilldamage != 0) {
       $('#doll' + (i + 1) + '-dmg').attr('data-original-title', `<b>${dollDataMap[echelon[i].id].name_skill1}:</b> ${echelon[i].battle.skilldamage}`);
     } else {
