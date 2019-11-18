@@ -3300,9 +3300,14 @@ function simulateBattle() {
             dmg *= enemy.battle.vulnerability;
             dmg *= doll.links - doll.battle.busylinks;
 
+            let hitCount = 1;
             if ('hitCount' in attackBuff) {
-              dmg *= $.isArray(attackBuff.hitCount) ? attackBuff.hitCount[attackBuff.level - 1] : attackBuff.hitCount;
+              hitCount = $.isArray(attackBuff.hitCount) ? attackBuff.hitCount[attackBuff.level - 1] : attackBuff.hitCount;
             }
+            dmg *= hitCount;
+
+            doll.shots += Math.floor ((doll.links - doll.battle.busylinks) * hitCount * shotmultiplier * (doll.battle.acc / (doll.battle.acc + enemy.battle.eva)));
+
             if (doll.type == 6) { //sg
               if (('targets' in attackBuff) && (!doll.hasSlug)) {
                 dmg = dmg * Math.min(attackBuff.targets, enemy.count);
@@ -3360,8 +3365,8 @@ function simulateBattle() {
             if (doll.type == 6) { //sg
               dmg = dmg * Math.min(doll.battle.targets, enemy.count);
             }
+            doll.shots += Math.floor ((doll.links - doll.battle.busylinks) * shotmultiplier * (doll.battle.acc / (doll.battle.acc + enemy.battle.eva)));
           }
-          doll.shots += Math.floor ((doll.links - doll.battle.busylinks) * shotmultiplier * (doll.battle.acc / (doll.battle.acc + enemy.battle.eva)));
 
           //handle pkp
           let extradmg = 0;
@@ -3394,6 +3399,7 @@ function simulateBattle() {
               extradmg *= $.isArray(extraAttack.hitCount) ? extraAttack.hitCount[extraAttack.level - 1] : extraAttack.hitCount;
               extrashots *= $.isArray(extraAttack.hitCount) ? extraAttack.hitCount[extraAttack.level - 1] : extraAttack.hitCount;
             }
+            doll.shots += extrashots;
 
             extradmg *= enemy.battle.vulnerability;
             extradmg *= doll.links - doll.battle.busylinks;
@@ -3696,6 +3702,7 @@ function simulateBattle() {
           dmg *= enemy.battle.vulnerability;
           dmg *= doll.battle.busylinks;
           doll.shots += sureHit? doll.battle.busylinks : Math.floor (doll.battle.busylinks * (doll.battle.acc / (doll.battle.acc + enemy.battle.eva)));
+
           if ('piercing' in action) {
             dmg *= enemy.count + 1;
           }
@@ -3766,7 +3773,6 @@ function simulateBattle() {
             doll.shots += sureHit? doll.battle.busylinks : doll.battle.busylinks * (doll.battle.acc / (doll.battle.acc + enemy.battle.eva));
           } else {
             dmg *= doll.links;
-            doll.shots += doll.links;
             doll.shots += sureHit? doll.links : doll.links * (doll.battle.acc / (doll.battle.acc + enemy.battle.eva));
           }
 
