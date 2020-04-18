@@ -1,0 +1,3 @@
+[submodule "brainlets/girlsfrontline"]
+	path = brainlets/girlsfrontline
+	url = git@github.com:creshal/brainlets-sim.git
