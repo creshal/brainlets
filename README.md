@@ -1,19 +1,24 @@
 # brainlets
 
-[brainlets.moe](http://brainlets.moe) is a simple website that features a few tools for the mobile game known as Girls' Frontline.
+[brainlets.moe](http://brainlets.moe) ~~is~~ ~~was~~ ~~will have been~~ ~~help how do tempora work~~ *is* a simple website that features a few tools for the mobile game known as Girls' Frontline.
+
+*After its shutdown, its combat sim (see below) will be hosted as part of [ATMG](https://gfl.matsuda.tips/). If anyone wants to take over the other sims, contact me.*
 
 ## Overview
 
-The key draw of this project is the [damage simulator](http://brainlets.moe/gf/sim/), a tool used by thousands of players across the world. The damage simulator aims to be user-friendly and up to date, all while attempting to be as accurate as a web-based simulator can be. As there are many other popular websites that feature other useful tools and guides for the game, the sim will remain the focus of project brainlets, as opposed to the development of other tools/pages.
+The key draw of this project is the [damage simulator](http://brainlets.moe/gf/sim/), a tool used by thousands of players across the world. The damage simulator aims to be user-friendly and up to date, all while attempting to be as accurate as a web-based simulator can be. ~~As there are many other popular websites that feature other useful tools and guides for the game, the sim will remain the focus of project brainlets, as opposed to the development of other tools/pages.~~
 
-This project was started on a whim by someone with no development experience. As such, there is a LOT of room for improvement. The technologies used were all chosen arbitrarily, as was the general design of the sim. Any and all feedback is welcome, and highly appreciated.
+*The damage sim has been moved [to its own repo](https://github.com/creshal/brainlets-sim), so it can be included in other Django projects more easily.*
+
+~~This project was started on a whim by someone with no development experience. As such, there is a LOT of room for improvement. The technologies used were all chosen arbitrarily, as was the general design of the sim. Any and all feedback is welcome, and highly appreciated.~~ *Haha, fuck that. Django works fine for me and I don't care about anything else.*
 
 ## Contributing
 
-Simply fork this repo, make changes, and submit a pull request. Just please be sure to test any changes you make. Feel free to reach out to me with any questions you may have.
+Simply fork this repo (and/or the combat sim repo), make changes, and submit a pull request. Just please be sure to test any changes you make. Feel free to reach out to me with any questions you may have.
 
 To get started:
-1. Fork this repo
+1. Fork this repo [and the simulator repo](https://github.com/creshal/brainlets-sim)
+2. Change the submodule path in the main repo, make sure your fork is used by your repo
 2. Have python3 installed (version 3.3+ preferred)
 3. [Create a virtual environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment) and [activate](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#activating-a-virtual-environment) it
 4. Install project dependencies using `pip install -r requirements.txt`
@@ -22,6 +27,8 @@ To get started:
 6. Use `python manage.py runserver` to start the dev server (defaults to `127.0.0.1:8000`)
 
 ## Local deployment via Docker
+
+*Supported by cleista/nananamae, don't ask me how this works. –creshal*
 
 The build instructions inside the project's Dockerfile make it fit for deployment on your local machine.
 If you intend to serve the project on a publicly accessible server, you should at least set up a reverse proxy,
